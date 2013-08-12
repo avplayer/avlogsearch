@@ -1,4 +1,4 @@
 avlogsearch
 ===========
 
-avlog search engine
+avbot logs search engine
