@@ -31,12 +31,12 @@
 			q = decodeURIComponent($("#searchtext").val());
 			$("div.result").html('载入中...');
 			$.get(
-				rpcurl + 'channel='+channel+'&q='+q+'&date=',
+				rpcurl + 'channel=' + channel + '&q=' + q + '&date=',
 				function(ret)
 				{
-					$("div.content p.summy_result").html('返回 '+ret.params.num_results+' 条结果:');
+					$("div.content p.summy_result").html('返回 ' + ret.params.num_results + ' 条结果:');
 					$("div.result").html('');
-					for(var i=0; i<ret.data.length; i++)
+					for (var i = 0; i < ret.data.length; i++)
 					{
 						var tmp = tpl;
 						tmp = tmp.replace(/{nick}/g, ret.data[i]['nick']);
