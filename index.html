@@ -1,0 +1,50 @@
+<html>
+	<head>
+		<title>Search Engine</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+		<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+		<script src="https://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+	</head>
+	<body>
+		<div class="div_search">
+			<input type="text" id="txt_search" />
+			<button value="GO" id="btn_submit" type="submit"/>
+		</div>
+		<div class="content">
+			<p class="summy_result"></p>
+			<div class="result">
+			</div>
+		</div>
+	</body>
+</html>
+
+<script src="settings.js"></script>
+
+<script type="text/javascript">
+	var tpl = '<ul><li>{nick}</li><li>{date}</li><li>{message}</li></ul>';
+	var q = '';
+	$("#btn_submit").click(
+		function()
+		{
+			q = decodeURIComponent($("#txt_search").val());
+			$("div.result").html('载入中...');
+			$.get(
+				rpcurl + 'channel='+channel+'&q='+q+'&date=',
+				function(ret)
+				{
+					$("div.content p.summy_result").html('返回 '+ret.params.num_results+' 条结果:');
+					$("div.result").html('');
+					for(var i=0; i<ret.data.length; i++)
+					{
+						var tmp = tpl;
+						tmp = tmp.replace(/{nick}/g, ret.data[i]['nick']);
+						tmp = tmp.replace(/{date}/g, ret.data[i]['date']);
+						tmp = tmp.replace(/{message}/g, ret.data[i]['message']);
+						$("div.result").append(tmp);
+					}
+				}
+			);
+		}
+   );
+</script>
