@@ -1,51 +1,115 @@
 <html>
-	<head>
-		<title>Search Engine</title>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-		<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
-		<script src="https://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
-	</head>
-	<body>
-		<div class="div_search">
-			<input type="text" id="txt_search" />
-			<button value="GO" id="btn_submit">GO</button>
-		</div>
-		<div class="content">
-			<p class="summy_result"></p>载入中...</p></p>
-			<div class="result">
-			</div>
-		</div>
-	</body>
+<head>
+    <title>Search Engine</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <style type="text/css">
+        .container {
+            width: 96%;
+            padding: 10px 20px;
+        }
+            .container ul li {
+                list-style: none;
+            }
+
+        .div_search {
+            width: 96%;
+            border-bottom: solid 1px #ccc;
+        }
+            .div_search .logo {
+                width:126px;
+                height:30px;
+            }
+
+        .inputs {
+            margin: 8px auto;
+            clear: both;
+            width: 100%;
+        }
+
+        #txt_search {
+            width: 521px;
+            line-height: 24px;
+            padding: 0 7px;
+        }
+
+        #btn_submit {
+            height: 32px;
+            width: 95px;
+            cursor: pointer;
+        }
+
+        .content {
+            width:96%;
+        }
+            .summy_result span {
+                color: #FFA517;
+                font-size: 11pt;
+            }
+
+        .r {
+            border-bottom:dotted 1px #ccc;
+            line-height:24px;
+            margin-bottom:3px;
+        }
+
+            .r .t {
+                color: #1E79A7;
+            }
+            .r .c {
+            }
+
+                .r .c .d {
+                    color: #008000;
+                    font-size: 9px;
+                    margin-right:10px;
+                }
+    </style>
+
+</head>
+<body>
+    <div class="div_header">
+        <!--<span>avplayer</span>-->
+        <img src="/search/img/searchlogo.png" width="126" />
+    </div>
+
+    <div class="div_search">
+        <input type="text" id="txt_search" />
+        <button value="GO" id="btn_submit">GO</button>
+    </div>
+    <div class="content">
+        <p class="summy_result"></p>载入中...</p></p>
+        <div class="result">
+        </div>
+    </div>
+</body>
 </html>
 
 <script src="settings.js"></script>
-
 <script type="text/javascript">
-	//alert(rpcurl);
-	var tpl = '<ul><li>{nick}</li><li>{date}</li><li>{message}</li></ul>';
-	var q = '';
-	$("#btn_submit").click(
-		function()
-		{
-			q = decodeURIComponent($("#searchtext").val());
-			$("div.result").html('载入中...');
-			$.get(
-				rpcurl + 'channel=' + channel + '&q=' + q + '&date=',
-				function(ret)
-				{
-					$("div.content p.summy_result").html('返回 ' + ret.params.num_results + ' 条结果:');
-					$("div.result").html('');
-					for (var i = 0; i < ret.data.length; i++)
-					{
-						var tmp = tpl;
-						tmp = tmp.replace(/{nick}/g, ret.data[i]['nick']);
-						tmp = tmp.replace(/{date}/g, ret.data[i]['date']);
-						tmp = tmp.replace(/{message}/g, ret.data[i]['message']);
-						$("div.result").append(tmp);
-					}
-				}
-			);
-		}
-   );
+var tpl = '<ul class="r"><li class="t"><span>{nick}</span>:</li><li class="c"><span class="d">{date}</span>{message}</li></ul>';
+var q = '';
+$("#btn_submit").click(
+    function()
+    {
+        q = decodeURIComponent($("#searchtext").val());
+        $("div.result").html('载入中...');
+        $.get(
+            rpcurl + 'channel=' + channel + '&q=' + q + '&date=',
+            function(ret)
+            {
+                $("div.content p.summy_result").html('返回 ' + ret.params.num_results + ' 条结果:');
+                $("div.result").html('');
+                for (var i = 0; i < ret.data.length; i++)
+                {
+                    var tmp = tpl;
+                    tmp = tmp.replace(/{nick}/g, ret.data[i]['nick']);
+                    tmp = tmp.replace(/{date}/g, ret.data[i]['date']);
+                    tmp = tmp.replace(/{message}/g, ret.data[i]['message']);
+                    $("div.result").append(tmp);
+                }
+            }
+        );
+    }
+);
 </script>
