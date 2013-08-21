@@ -90,7 +90,7 @@
 
 <script src="settings.js"></script>
 <script type="text/javascript">
-var tpl = '<ul class="r"><li class="t"><span><pre>{nick}</pre></span>:</li><li class="c"><span class="d"><a href="/{channel}/{datefile}.html" target="_blank">{date}</a></span><pre>{message}</pre></li></ul>';
+var tpl = '<ul class="r"><li class="t"><span><pre>{nick}</pre></span>:</li><li class="c"><span class="d"><a href="/{channel}/{datefile}.html#{id}" target="_blank">{date}</a></span><pre>{message}</pre></li></ul>';
 var q = '';
 $("#btn_submit").click(
     function()
@@ -106,6 +106,7 @@ $("#btn_submit").click(
                 for (var i = 0; i < ret.data.length; i++)
                 {
                     var tmp = tpl;
+                    tmp = tmp.replace(/{id}/g, ret.data[i]['id']);
                     tmp = tmp.replace(/{nick}/g, ret.data[i]['nick']);
                     tmp = tmp.replace(/{date}/g, ret.data[i]['date']);
                     tmp = tmp.replace(/{channel}/g, channel);
