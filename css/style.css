@@ -1,0 +1,81 @@
+.container {
+width: 96%;
+padding: 10px 20px;
+}
+
+.container ul li {
+list-style: none;
+}
+
+.div_search {
+width: 96%;
+border-bottom: solid 1px #ccc;
+}
+
+.div_search .logo {
+width: 126px;
+height: 30px;
+}
+
+.div_search span {
+border-left: solid 1px #ccc;
+padding-left: 5px;
+cursor: pointer;
+font-size: 9px;
+color:#ccc;
+}
+
+.div_search span:hover {
+color: #FFA517;
+}
+
+.div_search span.hov {
+font-size: 16px;
+color: #FFA517;
+}
+
+.inputs {
+margin: 8px auto;
+clear: both;
+width: 100%;
+}
+
+#txt_search {
+width: 521px;
+line-height: 24px;
+padding: 0 7px;
+}
+
+#btn_submit {
+height: 32px;
+width: 95px;
+cursor: pointer;
+}
+
+.content {
+width: 96%;
+}
+
+.summy_result span {
+color: #FFA517;
+font-size: 11pt;
+}
+
+.r {
+border-bottom: dotted 1px #ccc;
+line-height: 24px;
+margin-bottom: 3px;
+}
+
+.r .t {
+color: #1E79A7;
+}
+
+.r .c {
+}
+
+.r .c .d {
+color: #008000;
+font-size: 9px;
+margin-right: 10px;
+}
