@@ -36,7 +36,7 @@
             options: {
                 channel_def: "3597082",
                 rpcurl: "https://avlog.avplayer.org/rpc/search?",
-                tpl: '<ul class="r"><li class="t"><span>{nick}</span>:</li><li class="c"><span class="d">{date}</span>{message}</li></ul>',
+                tpl: '<ul class="{av____cls}" id="{av____id}" {av____event}><li class="t"><span>{av____nick}</span>:</li><li class="c"><span class="d">{av____date}</span>{av____message}</li></ul>',
                 search_url: function () {
                     return (location.href.indexOf("?") > -1 ? location.href.substr(0, location.href.indexOf("?")) : location.href);
                 },
@@ -86,12 +86,19 @@
                     $($("div.div_search span")[0]).attr("class", "hov");
                 }
             },
+            turn: function (o) {
+                var d = $("#" + o.id + " li.c span.d").text();
+                var dt = new Date(d);
+                var c = $.request("channel");
+                var path = "../" + c + "/" + d.substr(0, d.indexOf(" ")).replace("-", "").replace("-", "") + ".html#" + $(o).attr("id");
+                window.open(path);
+            },
             searchAction: function (q, channel) {
                 $("div.content p.summy_result").hide();
                 $("div.result").html('载入中...');
                 var debug = avsearch.options.is_debug;
                 $.get((!debug ?
-                    rpcurl + 'channel=' + channel + '&q=' + q + '&date=' :
+                    avsearch.options.rpcurl + 'channel=' + channel + '&q=' + q + '&date=' :
                     q + (channel == "3597082" ? "1" : "2") + '.json'),   //local test
                     function (ret) {
                         if (debug) { ret = $.parseJSON(ret); }
@@ -99,13 +106,15 @@
                         $("div.result").html('');
                         for (var i = 0; i < ret.data.length; i++) {
                             var tmp = avsearch.options.tpl;
-                            tmp = tmp.replace(/{nick}/g, ret.data[i]['nick']);
-                            tmp = tmp.replace(/{date}/g, ret.data[i]['date']);
-                            tmp = tmp.replace(/{message}/g, $("#someclass").text(ret.data[i]['message']).html());
+                            tmp = tmp.replace(/{av____id}/g, ret.data[i]['id'] || "");
+                            tmp = tmp.replace(/{av____cls}/g, ret.data[i]['id'] ? "r turn" : "r");
+                            tmp = tmp.replace(/{av____event}/g, ret.data[i]['id'] ? "onclick='avsearch.turn(this)'" : "");
+                            tmp = tmp.replace(/{av____nick}/g, ret.data[i]['nick']);
+                            tmp = tmp.replace(/{av____date}/g, ret.data[i]['date']);
+                            tmp = tmp.replace(/{av____message}/g, $("#someclass").text(ret.data[i]['message']).html());
                             $("div.result").append(tmp);
                         }
-
-			$("#someclass").text('');
+                        $("#someclass").hide();
                     }
                 );
             },
@@ -134,8 +143,6 @@
                         avsearch.channelSet(c);
                         avsearch.searchAction(q, c);
                     } else {
-                        //$("#txt_search").val("");
-                        //avsearch.channelSet();
                         $("div.content p.summy_result").hide();
                         $("div.result").html('');
                     }
@@ -161,6 +168,7 @@
         $(function () {
             avsearch.init();
         });
+
     </script>
 </head>
 <body>
@@ -172,10 +180,6 @@
                 <span channel="69195329">OpenERP-开发</span>
             </div>
             <div class="inputs">
-                <!--<select id="sel_channel">
-                    <option value="3597082">avplayer.org</option>
-                    <option value="69195329">OpenERP-开发</option>
-                </select>-->
                 <input type="text" id="txt_search" />
                 <input type="button" value="Search" id="btn_submit" />
             </div>
