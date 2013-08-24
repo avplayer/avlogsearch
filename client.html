@@ -66,14 +66,6 @@
         function getnewmessagefromajax()
         {
             $.getJSON(theURL, function(data1){
-						/*var lastID = parseInt(arrList[arrList.length-1].id);
-						for(var num=0;num < data1.data.length;num++)
-						{
-							if((parseInt(data1.data[num].id)) < lastID)
-								break;
-							appendmessage(data1.data[num]);
-							arrList.push(data1.data[num]);
-						}*/
 						var lastID = parseInt(arrList[arrList.length-1].id);
 						var num = 0;
 						for(num = data1.data.length - 1;
@@ -98,6 +90,7 @@
         function flashtitleandscrollbottom()
         {
         	$('#Container').animate({scrollTop: $('#Container')[0].scrollHeight});
+        	window.focus();
         }
     </script>
 </head>
