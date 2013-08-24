@@ -129,10 +129,11 @@
         	var nickname = $("#txtName").val();
         	var inputtext = $("#DataToSend").val();
         	var msgtext = nickname + " 说 :" + inputtext;
-        $.post(theMessageURL,msgtext,
+        $.post(theMessageURL,
+        "{ \"protocol\":\"rpc\",\"channel\":\"3597082\",\"message\":{\"text\" : \"" + msgtext + "\"} }" ,
     	 	function(data,status){
 		    ;
-		  });
+		  },"json");
 		  	$("#DataToSend").val("");
 		}
 		function showmysendmessage()
