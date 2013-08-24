@@ -38,7 +38,7 @@
             "date": getdatetime(),
             "channel": "3597082",
             "nick": "管理员",
-            "message": "欢迎进入聊天室",
+            "message": "欢迎进入Avplayer群聊天室",
             "id": "0"
         }];
         function getdatetime()
@@ -58,10 +58,17 @@
 			return (Y+"-"+M+"-"+D+" "+h+":"+m+":"+s);
 		}
         $(document).ready(function () {
-            //setInterval(updatedata, 5000);
+            initusername();
             appendmessage(arrList[0]);	//append welcome message
             getoldmessagefromajax();
         });
+        function initusername()
+        {
+        	var x = 1000;
+        	var y = 9999;
+        	var rand = parseInt(Math.random() * (x - y + 1) + y);
+        	$("#txtName").val("访客"+rand);
+        }
         function getoldmessagefromajax()
         {
             $.getJSON(theSearchURL, function(data1){
@@ -105,6 +112,31 @@
 	            getnewmessagefromajax();
              });
         }
+        function postmessagetoajax()
+        {
+        	var nickname = $("#txtName").val();
+        	var inputtext = $("#DataToSend").val();
+        	var msgtext = nickname + " 说 :" + inputtext;
+        $.post(theMessageURL,msgtext,
+    	 	function(data,status){
+		    	$("#DataToSend").val("");
+		    	
+		  });
+		}
+		function showmysendmessage()
+		{
+			var nickname = $("#txtName").val();
+        	var inputtext = $("#DataToSend").val();
+        	var msg = new Object();
+	        msg.date = getdatetime();
+	        msg.channel = "3597082";		//avplayer only
+	        msg.nick = nickname;
+	        msg.message = inputtext;
+	        msg.id = "0";
+	        appendmessage(msg);
+	        arrList.push(msg);
+		}
+        
     </script>
 </head>
 <body>
@@ -116,10 +148,9 @@
         <br />
         <br />
         <div id='Container' class='container'></div>
-        <br />
         <div id='SendDataContainer'>
-        <input type="text" id="DataToSend" size="88" />
-        <button id='SendData' type="button" onclick='SendDataClicked();'>发送</button>
+        <input type="text" id="DataToSend" size="88" style="width:90%;;height:25px;" />
+        <button id='SendData' type="button" style="width:9%;height:25px;" onclick='postmessagetoajax();'>发 送</button>
         </div>
         <br />
     </form>
