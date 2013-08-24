@@ -30,7 +30,10 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <script type="text/javascript">
-	var theURL = "https://avlog.avplayer.org/rpc/search?channel=3597082&q=&date=";
+	var theSearchURL = "https://avlog.avplayer.org/rpc/search?channel=3597082&q=&date=";
+	var theMessageURL = "https://avlog.avplayer.org/rpc/message";
+	//var theSearchURL = "data.json";
+	//var theMessageURL = "message.json";
     var arrList = [{
             "date": getdatetime(),
             "channel": "3597082",
@@ -55,17 +58,13 @@
 			return (Y+"-"+M+"-"+D+" "+h+":"+m+":"+s);
 		}
         $(document).ready(function () {
-            setInterval(updatedata, 5000);
+            //setInterval(updatedata, 5000);
             appendmessage(arrList[0]);	//append welcome message
-            updatedata();
+            getoldmessagefromajax();
         });
-        function updatedata()
+        function getoldmessagefromajax()
         {
-            getnewmessagefromajax();
-        }
-        function getnewmessagefromajax()
-        {
-            $.getJSON(theURL, function(data1){
+            $.getJSON(theSearchURL, function(data1){
 						var lastID = parseInt(arrList[arrList.length-1].id);
 						var num = 0;
 						for(num = data1.data.length - 1;
@@ -76,7 +75,7 @@
 							appendmessage(data1.data[num]);
 							arrList.push(data1.data[num]);
 						}
-						
+						getnewmessagefromajax();
                     });
         }
         function appendmessage(message)
@@ -85,12 +84,26 @@
         	+ "<span class='nick'>" + message.nick + ": </span>" 
         	+ "<span class='message'>" + message.message + "</span><br />";
         	$("#Container").append(string);
-        	flashtitleandscrollbottom();
         }
         function flashtitleandscrollbottom()
         {
         	$('#Container').animate({scrollTop: $('#Container')[0].scrollHeight});
         	window.focus();
+        }
+        function getnewmessagefromajax()
+        {
+        	var msg = new Object();
+        	$.getJSON(theMessageURL, function(data1){
+	            msg.date = getdatetime();
+	            msg.channel = data1.channel;
+	            msg.nick = data1.who.nick;
+	            msg.message = data1.message.text;
+	            msg.id = "0";
+	            appendmessage(msg);
+	            arrList.push(msg);
+	            flashtitleandscrollbottom();
+	            getnewmessagefromajax();
+             });
         }
     </script>
 </head>
