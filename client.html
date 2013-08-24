@@ -30,8 +30,7 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <script type="text/javascript">
-    var theURL = "data.json";
-    //var theURL = "https://avlog.avplayer.org/rpc/search?channel=3597082&q=&date=";
+	var theURL = "https://avlog.avplayer.org/rpc/search?channel=3597082&q=&date=";
     var arrList = [{
             "date": getdatetime(),
             "channel": "3597082",
@@ -94,6 +93,11 @@
         	+ "<span class='nick'>" + message.nick + ": </span>" 
         	+ "<span class='message'>" + message.message + "</span><br />";
         	$("#Container").append(string);
+        	flashtitleandscrollbottom();
+        }
+        function flashtitleandscrollbottom()
+        {
+        	$('#Container').animate({scrollTop: $('#Container')[0].scrollHeight});
         }
     </script>
 </head>
