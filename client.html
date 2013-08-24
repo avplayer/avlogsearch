@@ -1,0 +1,118 @@
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <title>Chat test</title>
+ <style type="text/css">
+     .container
+     {
+         font-family: "Courier New";
+         width: 100%;
+         height: 400px;
+         overflow: auto;
+         border: 1px solid black;
+     }
+     .datetime
+     {
+     	color: #008000;
+     	font-size: 12px;
+     }
+     .nick
+     {
+     	color: #1848B5;
+     	font-size: 14px;
+     }
+     .message
+     {
+   		color: #111111;
+     	font-size: 14px;
+     }
+   </style> 
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script type="text/javascript">
+    var theURL = "data.json";
+    //var theURL = "https://avlog.avplayer.org/rpc/search?channel=3597082&q=&date=";
+    var arrList = [{
+            "date": getdatetime(),
+            "channel": "3597082",
+            "nick": "管理员",
+            "message": "欢迎进入聊天室",
+            "id": "0"
+        }];
+        function getdatetime()
+		{
+			var now = new Date();
+			var Y=now.getFullYear();
+			var M="0"+(now.getMonth()+1);
+			var D="0"+now.getDate();
+			var h="0"+now.getHours();
+			var m="0"+now.getMinutes();
+			var s="0"+now.getSeconds();
+			if(M>9){M=now.getMonth()+1}
+			if(D>9){D=now.getDate()}
+			if(h>9){h=now.getHours()}
+			if(m>9){m=now.getMinutes()}
+			if(s>9){s=now.getSeconds()}
+			return (Y+"-"+M+"-"+D+" "+h+":"+m+":"+s);
+		}
+        $(document).ready(function () {
+            setInterval(updatedata, 5000);
+            appendmessage(arrList[0]);	//append welcome message
+            updatedata();
+        });
+        function updatedata()
+        {
+            getnewmessagefromajax();
+        }
+        function getnewmessagefromajax()
+        {
+            $.getJSON(theURL, function(data1){
+						/*var lastID = parseInt(arrList[arrList.length-1].id);
+						for(var num=0;num < data1.data.length;num++)
+						{
+							if((parseInt(data1.data[num].id)) < lastID)
+								break;
+							appendmessage(data1.data[num]);
+							arrList.push(data1.data[num]);
+						}*/
+						var lastID = parseInt(arrList[arrList.length-1].id);
+						var num = 0;
+						for(num = data1.data.length - 1;
+							num >= 0; num -- )
+						{
+							if((parseInt(data1.data[num].id)) <= lastID)
+								continue;
+							appendmessage(data1.data[num]);
+							arrList.push(data1.data[num]);
+						}
+						
+                    });
+        }
+        function appendmessage(message)
+        {
+        	var string = "<span class='datetime'>" + message.date.substring(11, message.date.length) + " </span>"
+        	+ "<span class='nick'>" + message.nick + ": </span>" 
+        	+ "<span class='message'>" + message.message + "</span><br />";
+        	$("#Container").append(string);
+        }
+    </script>
+</head>
+<body>
+    <div id="skm_LockPane" class="LockOff"></div>
+    <form id="form1" runat="server">
+        <h1> Chat test </h1>
+        <br />
+        用户名： <input type="text" id="txtName" value="访客1234"/>
+        <br />
+        <br />
+        <div id='Container' class='container'></div>
+        <br />
+        <div id='SendDataContainer'>
+        <input type="text" id="DataToSend" size="88" />
+        <button id='SendData' type="button" onclick='SendDataClicked();'>发送</button>
+        </div>
+        <br />
+    </form>
+</body>
+</html>
+
