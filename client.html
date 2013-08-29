@@ -28,7 +28,7 @@
      }
    </style> 
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.9.1.min.js"></script>
     <script type="text/javascript">
 	var theSearchURL = "https://avlog.avplayer.org/rpc/search?channel=3597082&q=&date=";
 	var theMessageURL = "https://avlog.avplayer.org/rpc/message";
@@ -41,6 +41,7 @@
             "message": "欢迎进入Avplayer群聊天室",
             "id": "0"
         }];
+     var mutex = false;
         function getdatetime()
 		{
 			var now = new Date();
@@ -61,6 +62,8 @@
             initusername();
             appendmessage(arrList[0]);	//append welcome message
             getoldmessagefromajax();
+            setTimeout(getmessagebymutex, 30000);
+            getnewmessagefromajax();
             $("#DataToSend").keydown(function(event){
 			if(event.keyCode == 13)
 				postmessagetoajax();
@@ -86,15 +89,15 @@
 							appendmessage(data1.data[num]);
 							arrList.push(data1.data[num]);
 						}
-						getnewmessagefromajax();
+						getmessagebymutex();
 						flashtitleandscrollbottom();
                     });
         }
         function appendmessage(message)
         {
-        	var string = "<span class='datetime'>" + message.date.substring(11, message.date.length) + " </span>"
+        	var string = "<span onmouseout='this.style.backgroundColor=\"\"' onmouseover='this.style.backgroundColor=\"#CCFFFF\"'><span class='datetime'>" + message.date.substring(11, message.date.length) + " </span>"
         	+ "<span class='nick'>" + message.nick + ": </span>" 
-        	+ "<span class='message'>" + message.message + "</span><br />";
+        	+ "<span class='message'>" + message.message + "</span><span><br />";
         	$("#Container").append(string);
         }
         function flashtitleandscrollbottom()
@@ -104,34 +107,49 @@
         }
         function getnewmessagefromajax()
         {
+        	mutex = true;
         	var msg = new Object();
-        	$.getJSON(theMessageURL, function(data1){
-        	try{
-	            msg.date = getdatetime();
-	            msg.channel = data1.channel;
-	            msg.nick = data1.who.nick;
-	            msg.message = data1.message.text;
-	            msg.id = "0";
-	            }
-	         catch(err){
-	            msg.date = getdatetime();
-	            msg.channel = "3597082";
-	            msg.nick = "avbot";
-	            msg.message = data1.message.text;
-	            msg.id = "0";
-	           }
-	           var lastMsg = arrList[arrList.length-1];
-	           if( lastMsg.channel == msg.channel 	//the same to last message
-	           //&& lastMsg.date == msg.date 
-	           && lastMsg.message == msg.message )
-	           	getnewmessagefromajax();
-	            if((msg.channel != "3597082") && (msg.channel != 3597082) && msg.channel != "")
-	            	getnewmessagefromajax();
-	            appendmessage(msg);
-	            arrList.push(msg);
-	            flashtitleandscrollbottom();
-	            getnewmessagefromajax();
-             });
+             $.ajax({
+				url: theMessageURL,
+				dataType: "json",
+				timeout: 30000,
+				type: "GET",
+				success: function (data1, textStatus) {
+					try{
+		            msg.date = getdatetime();
+		            msg.channel = data1.channel;
+		            msg.nick = data1.who.nick;
+		            msg.message = data1.message.text;
+		            msg.id = "0";
+		            }
+		         catch(err){
+		            msg.date = getdatetime();
+		            msg.channel = "3597082";
+		            msg.nick = "avbot";
+		            msg.message = data1.message.text;
+		            msg.id = "0";
+		           }
+		           var lastMsg = arrList[arrList.length-1];
+		           if(!( lastMsg.channel == msg.channel 
+		           && lastMsg.message == msg.message ) || 
+		           ((msg.channel != "3597082") && (msg.channel != 3597082) && msg.channel != ""))
+		           {
+			            appendmessage(msg);
+			            arrList.push(msg);
+			            flashtitleandscrollbottom();
+		            }
+				},
+				complete: function (XHRequest, T) {
+				 	XHRequest= null;
+				 	mutex = false;
+				 	getmessagebymutex();
+				 	return;
+				 },
+				 error: function (jqXHR, textStatus, errorThrown ) {
+				 	//alert("get message error.");
+				 	mutex = false;
+				 }
+				 });
         }
         function postmessagetoajax()
         {
@@ -158,22 +176,29 @@
 	        msg.id = "0";
 	        appendmessage(msg);
 	        arrList.push(msg);
+	        flashtitleandscrollbottom();
 		}
-		
+		function getmessagebymutex()
+		{
+			if(!mutex)
+			{
+				getnewmessagefromajax();
+			}
+		}
     </script>
 </head>
 <body>
     <div id="skm_LockPane" class="LockOff"></div>
     <form id="form1" runat="server">
-        <h1> Avplayer Chat </h1>
+        <h1> Avplayer Online Chat </h1>
         <br />
-        用户名： <input type="text" id="txtName" value="访客1234"/>
+        用户名：<input type="text" id="txtName" value="访客1234" style="height:30px;" autocomplete="off"/>
         <br />
         <br />
         <div id='Container' class='container'></div>
         <div id='SendDataContainer'>
-        <input type="text" id="DataToSend" size="88" style="width:90%;;height:25px;" />
-        <button id='SendData' type="button" style="width:9%;height:25px;" onclick='postmessagetoajax()'>发 送</button>
+        <input type="text" id="DataToSend" size="88" style="width:90%;;height:25px;" autocomplete="off"/>
+        <button id='SendData' type="button" style="width:8%;height:30px;" onclick='postmessagetoajax()'>发 送</button>
         </div>
         <br />
     </form>
