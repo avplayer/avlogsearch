@@ -95,7 +95,7 @@ var q = '';
 $("#btn_submit").click(
     function()
     {
-        q = decodeURIComponent($("#searchtext").val());
+        q = decodeURIComponent($("#searchtext").val().replace('%', '%25'));
         $("div.result").html('载入中...');
         $.get(
             rpcurl + 'channel=' + channel + '&q=' + q + '&date=',
