@@ -27,7 +27,7 @@
      	font-size: 14px;
      }
    </style> 
-
+<link href="css/chatstyle.css" type="text/css" rel="stylesheet" />
     <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.9.1.min.js"></script>
     <script type="text/javascript">
 	var theSearchURL = "https://avlog.avplayer.org/rpc/search?channel=3597082&q=&date=";
@@ -60,7 +60,7 @@
 		}
         $(document).ready(function () {
             initusername();
-            appendmessage(arrList[0]);	//append welcome message
+            appendmessage2(arrList[0]);	//append welcome message
             getoldmessagefromajax();
             setTimeout(getmessagebymutex, 30000);
             getnewmessagefromajax();
@@ -86,7 +86,7 @@
 						{
 							if((parseInt(data1.data[num].id)) <= lastID)
 								continue;
-							appendmessage(data1.data[num]);
+							appendmessage2(data1.data[num]);
 							arrList.push(data1.data[num]);
 						}
 						getmessagebymutex();
@@ -95,15 +95,20 @@
         }
         function appendmessage(message)
         {
-        	var string = "<span onmouseout='this.style.backgroundColor=\"\"' onmouseover='this.style.backgroundColor=\"#CCFFFF\"'><span class='datetime'>" + message.date.substring(11, message.date.length) + " </span>"
+        	var string = "<span onmouseout='this.style.backgroundColor=\"\"' onmouseover='this.style.backgroundColor=\"#CCFFFF\"'><span class='datetime'>" + message.date/*.substring(11, message.date.length)*/ + " </span>"
         	+ "<span class='nick'>" + message.nick + ": </span>" 
         	+ "<span class='message'>" + message.message + "</span><span><br />";
+        	$("#Container").append(string);
+        }
+        function appendmessage2(message)
+        {
+        	var string = "<div class='chat-item'><div class='chat-item-cont'><div class='bubble-name male'>" + message.date + "&nbsp;" + message.nick + ":</div><div class='bubble-pannel'><div class='bubble-body'><div class='bubble-cont'><pre>"+ message.message +"</pre></div></div></div></div></div>";
         	$("#Container").append(string);
         }
         function flashtitleandscrollbottom()
         {
         	$('#Container').animate({scrollTop: $('#Container')[0].scrollHeight});
-        	window.focus();
+        	//window.focus();
         }
         function getnewmessagefromajax()
         {
@@ -134,7 +139,7 @@
 		           && lastMsg.message == msg.message ) || 
 		           ((msg.channel != "3597082") && (msg.channel != 3597082) && msg.channel != ""))
 		           {
-			            appendmessage(msg);
+			            appendmessage2(msg);
 			            arrList.push(msg);
 			            flashtitleandscrollbottom();
 		            }
@@ -174,7 +179,7 @@
 	        msg.nick = nickname;
 	        msg.message = inputtext;
 	        msg.id = "0";
-	        appendmessage(msg);
+	        appendmessage2(msg);
 	        arrList.push(msg);
 	        flashtitleandscrollbottom();
 		}
