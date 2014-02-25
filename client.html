@@ -2,31 +2,6 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
     <title>Avplayer Chat</title>
- <style type="text/css">
-     .container
-     {
-         font-family: "Courier New";
-         width: 100%;
-         height: 400px;
-         overflow: auto;
-         border: 1px solid black;
-     }
-     .datetime
-     {
-     	color: #008000;
-     	font-size: 12px;
-     }
-     .nick
-     {
-     	color: #1848B5;
-     	font-size: 14px;
-     }
-     .message
-     {
-   		color: #111111;
-     	font-size: 14px;
-     }
-   </style> 
 <link href="css/chatstyle.css" type="text/css" rel="stylesheet" />
     <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.9.1.min.js"></script>
     <script type="text/javascript">
@@ -195,15 +170,16 @@
 <body>
     <div id="skm_LockPane" class="LockOff"></div>
     <form id="form1" runat="server">
-        <h1> Avplayer Online Chat </h1>
+        <h1 class="chatName"> Avplayer Online Chat </h1>
         <br />
-        用户名：<input type="text" id="txtName" value="访客1234" style="height:30px;" autocomplete="off"/>
+        <span class="chatName">用户名：</span><input type="text" id="txtName" value="访客1234" style="height:30px;" class="chatInput" autocomplete="off"/>
         <br />
         <br />
         <div id='Container' class='container'></div>
         <div id='SendDataContainer'>
-        <input type="text" id="DataToSend" size="88" style="width:90%;;height:25px;" autocomplete="off"/>
-        <button id='SendData' type="button" style="width:8%;height:30px;" onclick='postmessagetoajax()'>发 送</button>
+        <input type="text" id="DataToSend" size="88" style="width:90%;height:25px;" autocomplete="off" class="chatInput"/>
+        <!--<button id='SendData' type="button" style="width:8%;height:30px;" onclick='postmessagetoajax()'>发 送</button>-->
+        <input type="button" class="orange" id='SendData' style="width:8%;height:35px;color:#ffffff;float:right;font-size:14px;" value="发  送" onclick="postmessagetoajax()">
         </div>
         <br />
     </form>
