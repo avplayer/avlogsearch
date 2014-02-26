@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <head>
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-    <title>Avplayer Chat</title>
+    <title>Avplayer开源社区在线交流平台</title>
 <link href="css/chatstyle.css" type="text/css" rel="stylesheet" />
     <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.9.1.min.js"></script>
     <script type="text/javascript">
@@ -37,8 +37,8 @@
             initusername();
             appendmessage2(arrList[0]);	//append welcome message
             getoldmessagefromajax();
-            setTimeout(getmessagebymutex, 30000);
-            getnewmessagefromajax();
+            //setTimeout(getmessagebymutex, 30000);
+            getmessagebymutex();
             $("#DataToSend").keydown(function(event){
 			if(event.keyCode == 13)
 				postmessagetoajax();
@@ -110,14 +110,15 @@
 		            msg.id = "0";
 		           }
 		           var lastMsg = arrList[arrList.length-1];
-		           if(!( lastMsg.channel == msg.channel 
-		           && lastMsg.message == msg.message ) || 
-		           ((msg.channel != "3597082") && (msg.channel != 3597082) && msg.channel != ""))
+		           if("3597082" == msg.channel)
 		           {
-			            appendmessage2(msg);
-			            arrList.push(msg);
-			            flashtitleandscrollbottom();
-		            }
+		               if(lastMsg.message != msg.message)
+		               {
+		                   appendmessage2(msg);
+                           arrList.push(msg);
+                           flashtitleandscrollbottom();
+		               }
+		           }
 				},
 				complete: function (XHRequest, T) {
 				 	XHRequest= null;
@@ -126,15 +127,19 @@
 				 	return;
 				 },
 				 error: function (jqXHR, textStatus, errorThrown ) {
-				 	//alert("get message error.");
 				 	mutex = false;
+				 	getmessagebymutex();
 				 }
 				 });
         }
         function postmessagetoajax()
         {
         	var nickname = $("#txtName").val();
+        	if(strlen(nickname) <= 0) 
+        	{alert("请输入昵称再发送消息!");return;}
         	var inputtext = $("#DataToSend").val();
+        	if(strlen(inputtext) <= 0) 
+        	{alert("请勿发送空消息!");return;}
         	var msgtext = nickname + " 说 :" + inputtext;
         $.post(theMessageURL,
         "{ \"protocol\":\"rpc\",\"channel\":\"3597082\",\"message\":{\"text\" : \"" + msgtext + "\"} }" ,
@@ -170,19 +175,23 @@
 <body>
     <div id="skm_LockPane" class="LockOff"></div>
     <form id="form1" runat="server">
-        <h1 class="chatName"> Avplayer Online Chat </h1>
+        <h1 class="chatName">Avplayer开源社区在线交流平台</h1>
         <br />
-        <span class="chatName">用户名：</span><input type="text" id="txtName" value="访客1234" style="height:30px;" class="chatInput" autocomplete="off"/>
+        <span class="chatName">昵称：</span><input type="text" id="txtName" value="访客1234" style="height:25px;" class="chatInput" autocomplete="off"/>
         <br />
         <br />
-        <div id='Container' class='container'></div>
+        <center><div id='Container' class='container'></div></center>
         <div id='SendDataContainer'>
-        <input type="text" id="DataToSend" size="88" style="width:90%;height:25px;" autocomplete="off" class="chatInput"/>
+        <input type="text" id="DataToSend" size="88" style="width:600px;height:25px;" autocomplete="off" class="chatInput"/>
         <!--<button id='SendData' type="button" style="width:8%;height:30px;" onclick='postmessagetoajax()'>发 送</button>-->
-        <input type="button" class="orange" id='SendData' style="width:8%;height:35px;color:#ffffff;float:right;font-size:14px;" value="发  送" onclick="postmessagetoajax()">
+        <input type="button" class="orange" id='SendData' style="width:100px;height:35px;color:#ffffff;font-size:14px;" value="发&nbsp;&nbsp;送" onclick="postmessagetoajax()">
         </div>
         <br />
     </form>
+    
+    <div>
+	<p style="text-shadow:1px 1px 1px #aaaaaa;">中国技术第一的开源社区——<a href="https://www.avplayer.org" target="_blank">avplayer 开源社区</a></p>
+</div>
 </body>
 </html>
 
