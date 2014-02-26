@@ -37,7 +37,7 @@
             initusername();
             appendmessage2(arrList[0]);	//append welcome message
             getoldmessagefromajax();
-            //setTimeout(getmessagebymutex, 30000);
+            setTimeout(getmessagebymutex, 30000);
             getmessagebymutex();
             $("#DataToSend").keydown(function(event){
 			if(event.keyCode == 13)
@@ -128,17 +128,17 @@
 				 },
 				 error: function (jqXHR, textStatus, errorThrown ) {
 				 	mutex = false;
-				 	getmessagebymutex();
+				 	//getmessagebymutex();
 				 }
 				 });
         }
         function postmessagetoajax()
         {
         	var nickname = $("#txtName").val();
-        	if(strlen(nickname) <= 0) 
+        	if(nickname.length  <= 0) 
         	{alert("请输入昵称再发送消息!");return;}
         	var inputtext = $("#DataToSend").val();
-        	if(strlen(inputtext) <= 0) 
+        	if(inputtext.length <= 0) 
         	{alert("请勿发送空消息!");return;}
         	var msgtext = nickname + " 说 :" + inputtext;
         $.post(theMessageURL,
